@@ -40,12 +40,12 @@ LABEL v8.version=$V8_VERSION \
       maintainer="michal@jagielski.net"
 
 RUN apt-get update && apt-get upgrade -yqq && \
-    DEBIAN_FRONTEND=noninteractive apt-get install curl rlwrap cmake clang vim -yqq && \
+    DEBIAN_FRONTEND=noninteractive apt-get install curl rlwrap cmake g++ vim -yqq && \
     apt-get clean
 
 WORKDIR /v8
 
-COPY --from=builder /v8/out.gn/x64.release.sample/ ./release
+COPY --from=builder /v8/out.gn/x64.release.sample/ ./out.gn/x64.release.sample
 COPY --from=builder /v8/include ./include
 
 COPY vimrc /root/.vimrc
@@ -53,6 +53,6 @@ COPY vimrc /root/.vimrc
 COPY entrypoint.sh /
 
 RUN chmod +x /entrypoint.sh && \
-    ln -s /v8/release/d8 /usr/local/bin/d8
+    ln -s /v8/out.gn/x64.release.sample/d8 /usr/local/bin/d8
 
 ENTRYPOINT ["/entrypoint.sh"]
