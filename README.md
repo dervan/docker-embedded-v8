@@ -14,12 +14,20 @@ Sample usage in dockerfile, assuming you have C++ app in cxx dir in same root as
 ```
 FROM dervan/embedded-v8:latest
 
-COPY ./cxx /cxx
+COPY ./cxx /app
 
-WORKDIR /cxx
+WORKDIR /app
 RUN mkdir -p build && cd build && cmake .. && make
 
-ENTRYPOINT /cxx/build/app
+ENTRYPOINT /app/build/run_app
+```
+
+Inside a container headers are placed in `/v8/include` dir and obj files in `/v8/out.gn/x64.release.sample/obj`. For a complete example of an application see `./examples/app/`. You can build it with:
+
+```
+cd ./examples/app
+docker build -t example-v8-app -f Dockerfile .
+docker run -i example-v8-app <<< "() => Math.random()"
 ```
 
 # Build Local Image
